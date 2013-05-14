@@ -3,6 +3,7 @@ bigtracks/feature_extras.py
 bigtracks/read.py
 bigtracks/run.py
 bigtracks/statusboard.py
+bigtracks/tests.py
 bigtracks/track.py
 bigtracks/util.py
 bigtracks.egg-info/PKG-INFO

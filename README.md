@@ -29,20 +29,29 @@ Otherwise, the following Python packages are needed for `bigtracks` and the requ
 
 At present, the also-excellent [Enthought](https://www.enthought.com) EPD or Canopy include all of these *except* `numba`, though it is possible to install that package and its several requirements manually, by following the [instructions](https://github.com/numba/numba).
 
-## Installing `pytracks`
+## Easy
 
-`bigtracks` uses a special version of `pytracks` that has been accelerated with `numba`, and given a slightly modified API to permit handling of large datasets. This is currently found on [GitHub](http://github.com/nkeim/trackpy/). The easiest way to install it is with `pip`:
+`bigtracks` uses a special version of `pytracks` that has been accelerated with `numba`, and given a slightly modified API to permit handling of large datasets. This is currently found on [GitHub](http://github.com/nkeim/trackpy/). 
 
-    pip install -e 'git+http://github.com/nkeim/trackpy/@numba#egg=trackpy'
+The easiest way to install both packages is with `pip`:
 
-*Tip for novices:* Be sure that the `pip` you are running belongs to the Python installation you'll use for tracking (e.g. anaconda).
+    pip install 'git+http://github.com/nkeim/trackpy/@numba#egg=trackpy'
+    pip install 'git+http://github.com/nkeim/bigtracks/#egg=bigtracks'
 
-## Installing `bigtracks`
+*Tip for novices: Be sure that the `pip` you are running belongs to the Python installation you'll use for tracking (e.g. anaconda).*
 
-The easiest method is 
+This also works for upgrading to the latest version. If you want to muck about with the source code, add a `-e` after `pip install`, and a `src` directory will be created in your current directory.
 
-    pip install -e 'git+http://github.com/nkeim/bigtracks/#egg=bigtracks'
+## Manually
 
-Or, instead of the GitHub URL, use the path to a local directory or `.zip` file that contains the downloaded source code.
+Alternately, download the source of each package and run
 
-If you choose not to use `pip` or `easy_install`, you will need to make sure that the `path.py` package is installed.
+    python setup.py install
+
+in each source directory.
+
+If you choose not to use `pip` or `easy_install`, you will need to make sure that the `path.py` package is also installed. 
+
+# Documentation
+
+Docstrings in the source are reasonably complete, for now. There is also a demonstration IPython notebook in the `examples` directory.
