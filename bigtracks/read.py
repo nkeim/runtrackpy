@@ -4,12 +4,6 @@ Provides a context manager so that the underlying HDF5 file is always
 closed when you're done using it, which is important in long-running 
 interactive sessions.
 
-Example:
-    bt = BigTracks('bigtracks.h5')
-    with bt: # Opens file once --- best if you're planning to do a lot
-        framedata = bt.get_frame(5)
-        nframes = bt.maxframe()
-
 Alternately:
     bt = BigTracks('bigtracks.h5')
     framedata = bt.get_frame(5) # Opens file
@@ -40,7 +34,17 @@ class BigTracks(object):
     Each of the data-reading methods opens the file and then closes it, to avoid
     data consistency issues. However, instances of this class can also be used as
     context managers, so that the file is opened just once for multiple operations.
-    See module docstring for an example.
+
+    Example:
+        bt = BigTracks('bigtracks.h5')
+        with bt: # Opens file once --- best if you're planning to do a lot
+            framedata = bt.get_frame(5)
+            nframes = bt.maxframe()
+        frametracks = bt.get_frame(5) # This works too!
+
+    Individual frames can also be retrieved as dictionary items:
+        frametracks = bt[5]
+    If the frame is not in the file, an IndexError will be raised.
     """
     def __init__(self, filename='output/bigtracks.h5'):
         """NOTE: This does not open the file."""
@@ -48,6 +52,12 @@ class BigTracks(object):
         self._openfile = None
         self.table = None
     def __enter__(self):
+        if self._openfile is not None:
+            # Someone is trying to enter the context twice, without exiting first.
+            # To permit this, we'd have to use some kind of stack or counter to 
+            # decide when to close the file (i.e. which is the outermost context).
+            # For now, just make it illegal.
+            raise RuntimeError('This BigTracks instance is already being used as a context.')
         try:
             try:
                 self._openfile = tables.openFile(self.filename, 'r')
@@ -76,21 +86,27 @@ class BigTracks(object):
         else:
             with self:
                 yield
-    def query_tracks(self, *args, **kw):
+    def query(self, *args, **kw):
         """Perform generalized searches in a bigtracks table.
         
         Behaves like pytables' Table.where(), but returns a DataFrame.
         
-        Example: query_tracks('particle == 401')"""
+        Example: query('particle == 401')"""
         with self._open_tracks():
             return pandas.DataFrame(self.table.readWhere(*args, **kw))
     def get_frame(self, fnum):
         """Load data for a single frame."""
-        return self.query_tracks('(frame == %i)' % fnum)
+        return self.query('(frame == %i)' % fnum)
     def get_all(self):
         """Return the entire contents of the tracks table."""
         with self._open_tracks():
             return pandas.DataFrame(self.table[:])
+    def __getitem__(self, fnum):
+        ftr = self.get_frame(fnum)
+        if len(ftr):
+            return ftr
+        else:
+            raise IndexError('Frame %s not found' % str(fnum))
     def maxframe(self):
         """Frame number at end of bigtracks file."""
         with self._open_tracks():

@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='bigtracks',
-    version='0.1',
+    version='0.1.1',
     author='Nathan C. Keim',
     author_email='nkeim@seas.upenn.edu',
     url='https://github.com/nkeim/bigtracks',

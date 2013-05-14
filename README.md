@@ -33,7 +33,7 @@ At present, the also-excellent [Enthought](https://www.enthought.com) EPD or Can
 
 `bigtracks` uses a special version of `pytracks` that has been accelerated with `numba`, and given a slightly modified API to permit handling of large datasets. This is currently found on [GitHub](http://github.com/nkeim/trackpy/). The easiest way to install it is with `pip`:
 
-    pip 'git+http://github.com/nkeim/trackpy/@numba#egg=trackpy'
+    pip install -e 'git+http://github.com/nkeim/trackpy/@numba#egg=trackpy'
 
 *Tip for novices:* Be sure that the `pip` you are running belongs to the Python installation you'll use for tracking (e.g. anaconda).
 
@@ -41,7 +41,7 @@ At present, the also-excellent [Enthought](https://www.enthought.com) EPD or Can
 
 The easiest method is 
 
-    pip 'git+http://github.com/nkeim/bigtracks/#egg=bigtracks'
+    pip install -e 'git+http://github.com/nkeim/bigtracks/#egg=bigtracks'
 
 Or, instead of the GitHub URL, use the path to a local directory or `.zip` file that contains the downloaded source code.
 
