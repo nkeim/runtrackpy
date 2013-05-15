@@ -58,7 +58,7 @@ def _runtracking(mov, cfg, progress=False):
     return mov.p
 class TrackingRunner(object):
     """User interface for parallel tracking in IPython. Basic idea: run a specified 
-    function (default runtracking()) in a parallel worker for each movie directory 
+    function (default _runtracking()) in a parallel worker for each movie directory 
     given, and monitor status of the tracking jobs.
 
     'movie_dirs' is a list of directory names.
