@@ -144,15 +144,17 @@ def postprocess_features(df, params, window=None):
     else:
         return merge_groups(feats, merge_cutoff)
 def feature_iter(filename_pairs, params, window=None):
-    """Convert a sequence of (frame number, filename) into a sequence of features data"""
+    """Convert a sequence of (frame number, filename) into a sequence of features data.
+    
+    Note that this uses the track.imread(), not that from e.g. pylab."""
     for fnum, filename in filename_pairs:
         # NOTE that this imread is not like the matplotlib version, which is
         # already normalized.
         # We use this version because importing matplotlib is very expensive.
-        ftr = identify_frame(_imread(filename, params),
+        ftr = identify_frame(imread(filename, params),
                 params, window=window)
         yield fnum, ftr
-def _imread(filename, params=None):
+def imread(filename, params=None):
     """Load a single image, normalized to the range (0, 1). 
     Attempts to replicate matplotlib.imread() without matplotlib.
     Uses "maxgray" in 'params', if available.
@@ -278,6 +280,9 @@ def track2disk(imgfilenames, outfilename, params, selectframes=None,
     If 'progress', a status message will be displayed in IPython.
     'statusfile' optionally creates a JSON file that is continually updated with status
         information.
+
+    NOTE: track.imread() is used to read the image files. This does not always behave
+    as the more familiar imread() in pylab.
     """
     try: # Always close output file
         outfile = None
