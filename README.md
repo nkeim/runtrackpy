@@ -1,10 +1,10 @@
 # Overview
 
-`bigtracks` is an attempt to provide a somewhat friendly front-end for tracking particles in a series of video images. It uses [`trackpy`](http://github.com/tcaswell/trackpy/), Tom Caswell's Python implementation of the [Crocker-Grier particle-tracking algorithm](http://dx.doi.org/10.1006/jcis.1996.0217). 
+`bigtracks` is an attempt to provide a somewhat friendly front-end for tracking particles in a series of video images. It uses a fork of [`trackpy`](http://github.com/tcaswell/trackpy/), Tom Caswell's Python implementation of the [Crocker-Grier particle-tracking algorithm](http://dx.doi.org/10.1006/jcis.1996.0217). 
 
 Its principal virtues are
 
-- Like `trackpy`, it is free and open-source (under the GPL) and runs in a free environment.
+- Like `trackpy`, it is free and open-source (GPL) and runs in a free environment.
 - It scales efficiently to large datasets, limited only by disk space. In principle, available RAM limits only the size of a single frame.
 - It outputs to a standard numerical file format, HDF5, which is readable by MATLAB, IDL, etc. (although there, you may be limited by available RAM).
 - It includes tools for efficiently reading its particle tracks databases, which may be used as a foundation for your own analysis.
@@ -13,7 +13,7 @@ Its principal virtues are
 
 # Installation
 
-The easiest route is to first install the free [Anaconda](https://store.continuum.io/cshop/products/) Python distribution from [Continuum Analytics](http://continuum.io). 
+The easiest route is to first install the free [Anaconda](https://store.continuum.io/cshop/products/) Python distribution from [Continuum Analytics](http://continuum.io) or [Canopy](https://www.enthought.com/products/canopy/) from [Enthought](https://www.enthought.com). 
 
 Otherwise, the following Python packages are needed for `bigtracks` and the required version of `trackpy` (see below):
 
@@ -27,18 +27,16 @@ Otherwise, the following Python packages are needed for `bigtracks` and the requ
 - `tornado` to display the example IPython notebooks
 - `matplotlib` (optional)
 
-At present, the also-excellent [Enthought](https://www.enthought.com) EPD or Canopy include all of these *except* `numba`, though it is possible to install that package and its several requirements manually, by following the [instructions](https://github.com/numba/numba).
-
 ## Easy
 
 `bigtracks` uses a special version of `pytracks` that has been accelerated with `numba`, and given a slightly modified API to permit handling of large datasets. This is currently found on [GitHub](http://github.com/nkeim/trackpy/). 
 
-The easiest way to install both packages is with `pip`:
+The easiest way to install both packages is with `pip` *if* `git` is also installed:
 
     pip install 'git+http://github.com/nkeim/trackpy/@numba#egg=trackpy'
-    pip install 'git+http://github.com/nkeim/bigtracks/#egg=bigtracks'
+    pip install 'git+http://bitbucket.org/nkeim/bigtracks/#egg=bigtracks'
 
-*Tip for novices: Be sure that the `pip` you are running belongs to the Python installation you'll use for tracking (e.g. anaconda).*
+Remember to use double quotes (") on Windows. *Tip for novices: Be sure that the `pip` you are running belongs to the Python installation you'll use for tracking (e.g. anaconda).*
 
 This also works for upgrading to the latest version. If you want to muck about with the source code, add a `-e` after `pip install`, and a `src` directory will be created in your current directory.
 
