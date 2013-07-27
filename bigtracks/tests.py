@@ -1,8 +1,10 @@
+import logging
 import os.path, tempfile, shutil
 from glob import glob
 import random
 import numpy as np
 import scipy.misc
+
 from trackpy import identification
 
 from . import track, read

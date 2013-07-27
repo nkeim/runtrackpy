@@ -10,4 +10,5 @@ setup(
     url='https://github.com/nkeim/bigtracks',
     packages=['bigtracks'],
     install_requires=['path.py', 'trackpy'],
+    test_suite = 'nose.collector'
     )
