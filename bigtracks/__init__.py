@@ -13,6 +13,5 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program; if not, see <http://www.gnu.org/licenses>.
-from . import track, read
+from . import track
 from .run import TrackingRunner
-from .read import BigTracks
