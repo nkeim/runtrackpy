@@ -59,4 +59,4 @@ A check of basic functionality (similar to what's in the example notebook) can b
 
 # Documentation
 
-Docstrings in the source are reasonably complete, for now. There is also a demonstration IPython notebook in the `examples` directory.
+Docstrings in the source are reasonably complete, for now. There is also a demonstration IPython notebook in the `examples` directory; you can view it [here](http://nbviewer.ipython.org/urls/raw.github.com/nkeim/runtrackpy/master/examples/basic-tracking-demo.ipynb).
