@@ -29,7 +29,7 @@ Items 'xmin', 'xmax', 'ymin', and 'ymax' set the spatial limits. 'firstframe'
 and 'lastframe' set the range of frames to track, inclusive; the first frame 
 is numbered 1. All values are optional. 
 
-If you are using the bigtracks.run module, these can be stored in "bigtracking.ini" 
+If you are using the runtrackpy.run module, these can be stored in "trackpy.ini" 
 and "window.ini" in each movie directory.
 
 Simple example of a do-it-yourself tracking pipeline:

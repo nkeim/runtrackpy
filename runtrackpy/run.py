@@ -26,9 +26,9 @@ def _runtracking(mov, cfg, progress=False):
     otherwise, they are loaded from disk.
     
     To be run in a parallel worker. Expects to find the track2disk() function in
-    bigtracks.track
+    runtrackpy.track
     """
-    from bigtracks.track import track2disk, get_window
+    from runtrackpy.track import track2disk, get_window
     with mov():
         # Read parameters
         if cfg.get('quickparams') is not None:
@@ -69,7 +69,7 @@ class TrackingRunner(object):
         will be created.
     'quickparams' lets you pass a dictionary of tracking parameters. 
         If you do not specify it, the tracking parameters are loaded from
-        the file "bigtracks.ini" in each movie directory. See the "track" module 
+        the file "trackpy.ini" in each movie directory. See the "track" module 
         for details of what parameters are required.
     'frames_pattern' uses glob-style wildcards to specify image files, e.g.
         "Frame_*.png"
@@ -85,10 +85,10 @@ class TrackingRunner(object):
     def __init__(self, movie_dirs, load_balanced_view=None, 
             tracksfilename='bigtracks.h5', 
             quickparams=None, frames_pattern=None,
-            paramsfilename='bigtracking.ini',
+            paramsfilename='trackpy.ini',
             statusfilename='trackingstatus.json', 
             tracking_function=_runtracking):
-        """If quickparams == None, use 'bigtracks.ini' in each directory.
+        """If quickparams == None, use 'trackpy.ini' in each directory.
         If frames_pattern == None, tries to obtain the file list from
             the author's own custom movie class.
         """

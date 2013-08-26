@@ -1,2 +1,7 @@
 
 *.swp
+basic-tracking-demo.html
+build
+examples/bigtracks-demo-movie
+runtrackpy.egg-info
+basic-tracking-demo.py
