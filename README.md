@@ -1,6 +1,6 @@
 # Overview
 
-`runtrackpy` is an attempt to provide a somewhat friendly front-end for tracking particles in a series of video images. It uses a fork of [`trackpy`](http://github.com/tcaswell/trackpy/), Tom Caswell's Python implementation of the [Crocker-Grier particle-tracking algorithm](http://dx.doi.org/10.1006/jcis.1996.0217). 
+`runtrackpy` is an attempt to provide a somewhat friendly front-end for tracking particles in a series of video images. It uses a special accelerated version of [`trackpy`](http://github.com/tcaswell/trackpy/), Tom Caswell's Python implementation of the [Crocker-Grier particle-tracking algorithm](http://dx.doi.org/10.1006/jcis.1996.0217). 
 
 You can see it in action in an [example IPython notebook](http://nbviewer.ipython.org/urls/raw.github.com/nkeim/runtrackpy/master/examples/basic-tracking-demo.ipynb).
 
