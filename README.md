@@ -31,7 +31,7 @@ Otherwise, the following Python packages are needed for `runtrackpy` and the req
 
 ## Easy
 
-`runtrackpy` uses a special version of `pytracks` that has been accelerated with `numba`, and given a slightly modified API to permit handling of large datasets. This is currently found on [GitHub](http://github.com/nkeim/trackpy/). If you want an easy way to read the tracks files that are produced, and/or to test `runtrackpy`, you will also need [`pantracks`](http://github.com/nkeim/pantracks/).
+`runtrackpy` uses a special version of `trackpy` that has been accelerated with `numba`, and given a slightly modified API to permit handling of large datasets. This is currently found on [GitHub](http://github.com/nkeim/trackpy/). If you want an easy way to read the tracks files that are produced, and/or to test `runtrackpy`, you will also need [`pantracks`](http://github.com/nkeim/pantracks/).
 
 The easiest way to install all packages is with `pip`, *if* `git` is also installed (which it should already be on Mac or Linux):
 
