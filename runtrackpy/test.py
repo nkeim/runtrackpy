@@ -1,10 +1,9 @@
-import os.path, tempfile, shutil
+import os.path, tempfile, shutil, itertools
 from glob import glob
 import random
 import numpy as np
+import numpy.random as npr
 import scipy.misc
-
-from trackpy import identification
 
 from . import track
 from pantracks import BigTracks, bigtracks
@@ -28,7 +27,31 @@ def fake_image(motion_seed=1, pos_seed=314, size=200, maxdisp=3):
 
     np.random.seed(motion_seed)
     pos = pos + (np.random.random(pos.shape) - 0.5) * 2 * maxdisp + pad/2
-    return pos[1], pos[0], identification.gen_fake_data(pos, 5, 2.5, (size + pad, size + pad))
+    return pos[1], pos[0], gen_fake_data(pos, 5, 2.5, (size + pad, size + pad))
+def gen_fake_data(list_of_locs, p_rad, hwhm, img_shape):
+    """
+    Function to generate fake images for testing purposes
+    """
+    img = np.zeros(img_shape)
+
+    def pixel_values(window, loc):
+        i = np.mgrid[window] - loc.reshape(len(window), *[1] * len(window))
+        r = np.zeros(i[0].shape)
+        for _ in i:
+            r += _ ** 2
+
+        return np.exp(-r / (hwhm ** 2))
+
+    for loc in itertools.izip(*list_of_locs):
+        window = [slice(int(p) - (p_rad + 2), int(p) + (p_rad + 2) + 1) for p in loc]
+
+        p = pixel_values(window, np.array(loc))
+        img[window] += p
+
+    img *= 5
+    img += npr.randn(*img.shape) * .1
+
+    return img
 
 def test_identification():
     x, y, img = fake_image(1, maxdisp=3)

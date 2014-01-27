@@ -5,3 +5,4 @@ build
 examples/bigtracks-demo-movie
 runtrackpy.egg-info
 basic-tracking-demo.py
+.idea

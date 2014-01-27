@@ -58,7 +58,8 @@ import numpy as np
 import scipy.misc
 from scipy.spatial import cKDTree
 import pandas, tables
-import trackpy.identification, trackpy.tracking
+import trackpy.feature, trackpy.linking
+from . import identification
 from .util import readSingleCfg
 from .statusboard import StatusFile, Stopwatch, format_td
 
@@ -117,10 +118,10 @@ def identify_frame_basic(im, params, window=None):
     bplow = int(params.get('bplow', featsize))
     threshold = float(params.get('threshold', 1e-15))
     # Feature identification
-    imbp = trackpy.identification.band_pass(im, bplow, bphigh)
-    lm = trackpy.identification.find_local_max(imbp, featsize, threshold=threshold)
-    lmcrop = trackpy.identification.local_max_crop(imbp, lm, featsize)
-    pos, m, r2 = trackpy.identification.subpixel_centroid(imbp, lmcrop, featsize, struct_shape='circle')
+    imbp = identification.band_pass(im, bplow, bphigh)
+    lm = identification.find_local_max(imbp, featsize, threshold=threshold)
+    lmcrop = identification.local_max_crop(imbp, lm, featsize)
+    pos, m, r2 = identification.subpixel_centroid(imbp, lmcrop, featsize, struct_shape='circle')
     # Munging
     df = pandas.DataFrame({'x': pos[0,:], 'y': pos[1,:], 'intensity': m, 'rg2': r2})
     return postprocess_features(df, params, window=window)
@@ -243,7 +244,7 @@ def link_dataframes(points, params):
         fnum, ftr = point_datum
         ftr = ftr.copy()
         ftr['indx'] = ftr.index.values
-        return [trackpy.tracking.IndexedPointND(fnum, (x, y), indx) for x, y, indx \
+        return [trackpy.linking.IndexedPointND(fnum, (x, y), indx) for x, y, indx \
                 in ftr[['x', 'y', 'indx']].values.tolist()]
     def unpackTracks(pair):
         # Add tracking output (particle IDs) to full particle data.
@@ -251,19 +252,15 @@ def link_dataframes(points, params):
         fnum, ftr = point_data
         ftr = ftr.copy()
         ftr['frame'] = fnum
-        if tracks:
-            # Sanity check.
-            assert fnum == tracks[0][1].t
-        pidxs, trkids = [], []
-        for trkid, pt in tracks:
-            pidxs.append(pt.indx)
-            trkids.append(trkid)
-        ftr['particle'] = pandas.Series(trkids, index=pidxs, dtype=float)
+        labels = map(lambda x: x.track.id, tracks)
+        ftr['particle'] = pandas.Series(labels, dtype=float)
         return ftr
     point_data, point_data_tolink = itertools.tee(points)
-    linkiter = trackpy.tracking.link_iter(itertools.imap(preparePoints, point_data_tolink), 
-                                search_range=search_range,
-                                memory=memory)
+    linkiter = trackpy.linking.link_iter(itertools.imap(preparePoints, point_data_tolink),
+                                search_range,
+                                memory=memory,
+                                neighbor_strategy='KDTree',
+                                link_strategy='nonrecursive')
     return itertools.imap(unpackTracks, itertools.izip(point_data, linkiter))
 # An entire tracking pipeline, including storage to disk
 def track2disk(imgfilenames, outfilename, params, selectframes=None, 
