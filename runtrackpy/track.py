@@ -260,7 +260,7 @@ def link_dataframes(points, params):
                                 search_range,
                                 memory=memory,
                                 neighbor_strategy='KDTree',
-                                link_strategy='nonrecursive')
+                                link_strategy='auto')
     return itertools.imap(unpackTracks, itertools.izip(point_data, linkiter))
 # An entire tracking pipeline, including storage to disk
 def track2disk(imgfilenames, outfilename, params, selectframes=None, 
