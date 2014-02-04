@@ -252,8 +252,8 @@ def link_dataframes(points, params):
         fnum, ftr = point_data
         ftr = ftr.copy()
         ftr['frame'] = fnum
-        labels = map(lambda x: x.track.id, tracks)
-        ftr['particle'] = pandas.Series(labels, dtype=float)
+        index, labels = zip(*map(lambda x: (x.id, x.track.id), tracks))
+        ftr['particle'] = pandas.Series(labels, index=index, dtype=float)
         return ftr
     point_data, point_data_tolink = itertools.tee(points)
     linkiter = trackpy.linking.link_iter(itertools.imap(preparePoints, point_data_tolink),
