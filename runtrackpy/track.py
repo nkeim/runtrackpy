@@ -255,6 +255,7 @@ def link_dataframes(points, params):
                                 search_range,
                                 memory=memory,
                                 neighbor_strategy='KDTree',
+                                link_strategy='auto',
                                 retain_index=True)
 # An entire tracking pipeline, including storage to disk
 def track2disk(imgfilenames, outfilename, params, selectframes=None, 
@@ -293,7 +294,7 @@ def track2disk(imgfilenames, outfilename, params, selectframes=None,
             statfile.update(dict(status='starting'))
         tracks_iter = link_dataframes(feature_iter(filepairs, params, window=window), 
                 params)
-        for (fnum, filename), ftr in itertools.izip(filepairs, tracks_iter):
+        for loopcount, ((fnum, filename), ftr) in enumerate(itertools.izip(filepairs, tracks_iter)):
             if statusfile is not None:
                 stopwatch.lap()
                 statfile.update(dict(status='working', mr_frame=fnum, mr_imgfile='filename',
@@ -303,8 +304,8 @@ def track2disk(imgfilenames, outfilename, params, selectframes=None,
             if progress:
                 import IPython.display
                 IPython.display.clear_output()
-                print '{} particles in frame {} of {}: {}'.format(
-                        len(ftr), fnum, len(filepairs), filename)
+                print '{} particles in frame {} ({} of {}): {}'.format(
+                        len(ftr), fnum, loopcount+1, len(filepairs), filename)
                 sys.stdout.flush()
             if outfile is None:
                 # We create the output file now so we can provide an estimate of total size.

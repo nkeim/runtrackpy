@@ -14,7 +14,7 @@
 
 import numpy as np
 from scipy import ndimage
-from trackpy import identification
+from . import identification
 from .track import postprocess_features
 import pandas
 
