@@ -58,7 +58,7 @@ import numpy as np
 import scipy.misc
 from scipy.spatial import cKDTree
 import pandas, tables
-import trackpy.feature, trackpy.linking
+import trackpy.feature, trackpy.linking, trackpy.predict
 from . import identification
 from .util import readSingleCfg
 from .statusboard import StatusFile, Stopwatch, format_td
@@ -239,29 +239,23 @@ def link_dataframes(points, params):
     """
     search_range = float(params.get('maxdisp', None))
     memory = int(params.get('memory', 0))
-    def preparePoints(point_datum):
-        # Prepare input
-        fnum, ftr = point_datum
-        ftr = ftr.copy()
-        ftr['indx'] = ftr.index.values
-        return [trackpy.linking.IndexedPointND(fnum, (x, y), indx) for x, y, indx \
-                in ftr[['x', 'y', 'indx']].values.tolist()]
-    def unpackTracks(pair):
-        # Add tracking output (particle IDs) to full particle data.
-        point_data, tracks = pair
-        fnum, ftr = point_data
-        ftr = ftr.copy()
-        ftr['frame'] = fnum
-        index, labels = zip(*map(lambda x: (x.id, x.track.id), tracks))
-        ftr['particle'] = pandas.Series(labels, index=index, dtype=float)
-        return ftr
-    point_data, point_data_tolink = itertools.tee(points)
-    linkiter = trackpy.linking.link_iter(itertools.imap(preparePoints, point_data_tolink),
+    predict = params.get('predict')
+    if not predict:
+        linker = trackpy.linking.link_df_iter
+    elif predict == 'nearest':
+        linker = trackpy.predict.NearestVelocityPredict().link_df_iter
+    else:
+        raise ValueError('predict parameter must be "nearest" or nothing.')
+    def prepareFrame(frame, fnum):
+        frame = frame.copy()
+        frame['frame'] = fnum
+        return frame
+
+    return linker((prepareFrame(fr, fn) for fn, fr in points),
                                 search_range,
                                 memory=memory,
                                 neighbor_strategy='KDTree',
-                                link_strategy='auto')
-    return itertools.imap(unpackTracks, itertools.izip(point_data, linkiter))
+                                retain_index=True)
 # An entire tracking pipeline, including storage to disk
 def track2disk(imgfilenames, outfilename, params, selectframes=None, 
         window=None, progress=False, statusfile=None):

@@ -62,10 +62,11 @@ def test_identification():
 class test_pipeline():
     # i.e. track2disk
     def setUp(self):
+        self.params = dict(bright=1, featsize=5, bphigh=2, threshold=0.5, maxdisp=3 * np.sqrt(8))
         self.testdir = tempfile.mkdtemp()
         self.extension = 'PNG'
         self.outputfile = os.path.join(self.testdir, 'bttest_tracks.h5')
-        self.nframes = 10
+        self.nframes = 3
         for framenumber in range(self.nframes):
             x, y, img = fake_image(framenumber)
             self.nparticles = len(x)
@@ -73,8 +74,7 @@ class test_pipeline():
                 'bttest_%.4i.%s' % (framenumber, self.extension)), img)
     def test_tracking(self):
         imgfiles = glob(os.path.join(self.testdir, '*.' + self.extension))
-        params = dict(bright=1, featsize=5, bphigh=2, threshold=0.5, maxdisp=3 * np.sqrt(8))
-        track.track2disk(imgfiles, self.outputfile, params)
+        track.track2disk(imgfiles, self.outputfile, self.params)
         bt = BigTracks(self.outputfile)
         assert bt.maxframe() == self.nframes
         assert len(bt.get_all()) == self.nframes * self.nparticles
@@ -84,5 +84,9 @@ class test_pipeline():
     def tearDown(self):
         shutil.rmtree(self.testdir)
 
-
+class test_pipeline_predict(test_pipeline):
+    def setUp(self):
+        test_pipeline.setUp(self)
+        self.params['predict'] = 'nearest'
+        self.params['maxdisp'] = 4 * np.sqrt(8) # Prediction is bad for fake Brownian particles!
 
