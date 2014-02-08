@@ -239,13 +239,24 @@ def link_dataframes(points, params):
     """
     search_range = float(params.get('maxdisp', None))
     memory = int(params.get('memory', 0))
+
     predict = params.get('predict')
     if not predict:
-        linker = trackpy.linking.link_df_iter
+        predictor = None
     elif predict == 'nearest':
-        linker = trackpy.predict.NearestVelocityPredict().link_df_iter
+        predictor = trackpy.predict.NearestVelocityPredict()
+    elif predict == 'channel':
+        predictor = trackpy.predict.ChannelPredict(int(params.get('predict_channel_bin_size', 50)))
     else:
         raise ValueError('predict parameter must be "nearest" or nothing.')
+
+    if 'predictor' in params:
+        predictor = params['predictor']
+    if predictor is not None:
+        linker = predictor.link_df_iter
+    else:
+        linker = trackpy.linking.link_df_iter
+
     def prepareFrame(frame, fnum):
         frame = frame.copy()
         frame['frame'] = fnum
